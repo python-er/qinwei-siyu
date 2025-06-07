@@ -19,7 +19,7 @@ function App() {
 
   // 登录
   const handleLogin = async () => {
-    const response = await fetch('http://localhost:5001/login', {
+    const response = await fetch('http://localhost:5000/login', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(loginData),
@@ -39,7 +39,7 @@ function App() {
 
   // 登出
   const handleLogout = async () => {
-    const response = await fetch('http://localhost:5001/logout', {
+    const response = await fetch('http://localhost:5000/logout', {
       method: 'GET',
       credentials: 'include',
     });
@@ -54,7 +54,7 @@ function App() {
   // 获取标题名字
   const fetchProfileName = async () => {
     try {
-      const response = await fetch('http://localhost:5001/api/profile-name', {
+      const response = await fetch('http://localhost:5000/api/profile-name', {
         credentials: 'include',
       });
       if (response.ok) {
