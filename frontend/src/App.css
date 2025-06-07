@@ -1,0 +1,152 @@
+.container {
+  font-family: Arial, sans-serif;
+  padding: 10px;
+  max-width: 400px;
+  margin: 0 auto;
+  background-color: #f5f5f5;
+}
+
+header {
+  text-align: right;
+  padding: 5px 0;
+}
+
+.time-signal {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+}
+
+.signal .wifi {
+  margin-right: 5px;
+}
+
+.signal .bars {
+  font-size: 14px;
+}
+
+.profile {
+  display: flex;
+  align-items: center;
+  padding: 10px;
+  background-color: white;
+  border-radius: 5px;
+  margin-bottom: 10px;
+}
+
+.profile img {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  margin-right: 10px;
+}
+
+.profile-info h3 {
+  margin: 0;
+  font-size: 16px;
+}
+
+.profile-info p {
+  margin: 5px 0 0;
+  font-size: 12px;
+  color: #666;
+}
+
+.token-count {
+  margin-left: auto;
+  text-align: right;
+}
+
+.token-count span {
+  display: block;
+}
+
+.token-count .count {
+  font-size: 24px;
+  color: red;
+}
+
+.status-buttons {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+
+.status-btn {
+  padding: 5px 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  background-color: white;
+}
+
+.status-btn.active {
+  background-color: #d4edda;
+  border-color: #c3e6cb;
+  color: #155724;
+}
+
+.toggle-buttons {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+
+.toggle-btn {
+  padding: 5px 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  background-color: white;
+}
+
+.toggle-btn.active {
+  background-color: #007bff;
+  color: white;
+}
+
+.log-section h4 {
+  font-size: 16px;
+  margin: 10px 0;
+}
+
+.log-section ul {
+  list-style: none;
+  padding: 0;
+}
+
+.log-section li {
+  font-size: 12px;
+  color: #333;
+  margin-bottom: 5px;
+}
+
+.fetch-btn {
+  width: 100%;
+  padding: 10px;
+  background-color: #dc3545;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  font-size: 16px;
+}
+
+/* 之前的内容保持不变 */
+.login-section {
+  padding: 20px;
+  text-align: center;
+}
+
+.login-section input {
+  display: block;
+  margin: 10px auto;
+  padding: 5px;
+  width: 200px;
+}
+
+.login-section button {
+  padding: 10px 20px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  font-size: 16px;
+}
