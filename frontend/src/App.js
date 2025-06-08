@@ -3,13 +3,15 @@ import './App.css';
 
 function App() {
   const [logs, setLogs] = useState([]);
+  const [count, setCount] = useState(0);
   const [profileName, setProfileName] = useState('加载中...');
   const [isRunning, setIsRunning] = useState(false);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [role, setRole] = useState('user');
   const [username, setUsername] = useState('');
   const [loginData, setLoginData] = useState({ username: '', password: '' });
-  const [selectedPlatforms, setSelectedPlatforms] = useState(['小红书', '微信']); // 初始选中状态
+  const [selectedPlatforms, setSelectedPlatforms] = useState(['小红书', '微信']);
+  const [windowWidth, setWindowWidth] = useState(window.innerWidth); // 跟踪窗口宽度
 
   // 处理登录输入
   const handleInputChange = (e) => {
@@ -17,9 +19,11 @@ function App() {
     setLoginData({ ...loginData, [name]: value });
   };
 
+  const ngrokUrl = 'http://localhost:5007';
+
   // 登录
   const handleLogin = async () => {
-    const response = await fetch('http://localhost:5000/login', {
+    const response = await fetch(`/login`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(loginData),
@@ -39,7 +43,7 @@ function App() {
 
   // 登出
   const handleLogout = async () => {
-    const response = await fetch('http://localhost:5000/logout', {
+    const response = await fetch(`/logout`, {
       method: 'GET',
       credentials: 'include',
     });
@@ -54,7 +58,7 @@ function App() {
   // 获取标题名字
   const fetchProfileName = async () => {
     try {
-      const response = await fetch('http://localhost:5000/api/profile-name', {
+      const response = await fetch(`/api/profile-name`, {
         credentials: 'include',
       });
       if (response.ok) {
@@ -88,7 +92,7 @@ function App() {
   const generateLog = () => {
     const now = new Date();
     const year = now.getFullYear();
-    const month = String(now.getMonth() + 1).padStart(2, '0'); // 月份从0开始
+    const month = String(now.getMonth() + 1).padStart(2, '0');
     const day = String(now.getDate()).padStart(2, '0');
     const hours = String(now.getHours()).padStart(2, '0');
     const minutes = String(now.getMinutes()).padStart(2, '0');
@@ -96,14 +100,14 @@ function App() {
     const timestamp = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
 
     const ids = [7552, 5661, 8510, 6312, 7272, 8372, 6739, 7931, 3136, 6766, 5316, 6933];
-    const statuses = ['发送指令成功', '发送指令失败'];
+    const statuses = ['发送指令成功'];
     const allPlatforms = ['Soul', '小红书', '微信', '微博'];
     const availablePlatforms = selectedPlatforms.length > 0 ? selectedPlatforms : allPlatforms;
 
     const id = ids[Math.floor(Math.random() * ids.length)];
     const status = statuses[Math.floor(Math.random() * statuses.length)];
     const platform = availablePlatforms[Math.floor(Math.random() * availablePlatforms.length)];
-    const platformStr = [platform]; // 简化，单平台展示
+    const platformStr = [platform];
 
     return `${timestamp} ${id} - ${status} - 来自[${platformStr}]`;
   };
@@ -113,15 +117,26 @@ function App() {
     let interval;
     if (isRunning && isAuthenticated && selectedPlatforms.length > 0) {
       interval = setInterval(() => {
-        setLogs((prevLogs) => [generateLog(), ...prevLogs.slice(0, 11)]);
+        setLogs((prevLogs) => {
+          const newLog = generateLog();
+          const updatedLogs = [...prevLogs, newLog].slice(-8);
+          setCount((preCount) => preCount + 1);
+          return updatedLogs;
+        });
       }, 100);
     } else if (isRunning && isAuthenticated && selectedPlatforms.length === 0) {
-      // 如果没有选中平台，停止更新
-      setIsRunning(false); // 自动停止接收
+      setIsRunning(false);
       alert('请至少选择一个平台');
     }
     return () => clearInterval(interval);
-  }, [isRunning, isAuthenticated, selectedPlatforms]); // 依赖 selectedPlatforms
+  }, [isRunning, isAuthenticated, selectedPlatforms]);
+
+  // 监听窗口大小变化
+  useEffect(() => {
+    const handleResize = () => setWindowWidth(window.innerWidth);
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   // 开始/停止接收
   const toggleReceiving = () => {
@@ -141,15 +156,6 @@ function App() {
 
   return (
     <div className="container">
-      <header>
-        <div className="time-signal">
-          <span>03:31</span>
-          <span className="signal">
-            <span className="wifi">📶</span>
-            <span className="bars">88</span>
-          </span>
-        </div>
-      </header>
       <main>
         {!isAuthenticated ? (
           <div className="login-section">
@@ -172,18 +178,20 @@ function App() {
         ) : (
           <>
             <div className="profile">
-              <img src="https://via.placeholder.com/50" alt="Profile" />
+              <img src="/static/profile.jpg" alt="Profile" />
               <div className="profile-info">
                 <h3>{profileName}</h3>
-                <p>综合私域获客专家Pro 服务器登录失败: 已连接24服务器 当前服务器token: 2B8900D0E1162E88</p>
+                <p>综合私域获客专家Pro</p>
+                <p>服务器登录成功: 已连接24服务器</p>
+                <p>当前服务器token: 2B8900D0E1162E88</p>
               </div>
               <div className="token-count">
                 <span>已接收</span>
-                <span className="count">104</span>
+                <span className="count">{count}</span>
               </div>
             </div>
             <div className="toggle-buttons">
-              {['Soul', '小红书', '微信', '微博'].map((platform) => (
+              {['Soul', '小红书', '微信', '微博', '抖音'].map((platform) => (
                 <button
                   key={platform}
                   className={`toggle-btn ${selectedPlatforms.includes(platform) ? 'active' : ''}`}
@@ -201,9 +209,11 @@ function App() {
             <div className="log-section">
               <h4>获客列表</h4>
               <ul>
-                {logs.map((log, index) => (
-                  <li key={index}>{log}</li>
-                ))}
+                {logs
+                  .slice(0, windowWidth <= 768 ? 8 : logs.length) // 手机显示10条，PC显示全部
+                  .map((log, index) => (
+                    <li key={index}>{log}</li>
+                  ))}
               </ul>
             </div>
             <button className="fetch-btn" onClick={toggleReceiving}>

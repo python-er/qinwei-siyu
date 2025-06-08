@@ -1,4 +1,4 @@
-from flask import Flask, jsonify, request, render_template
+from flask import Flask, jsonify, request, render_template,send_from_directory
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
 from flask_bcrypt import Bcrypt
@@ -7,9 +7,16 @@ import os
 
 app = Flask(__name__)
 CORS(app, resources={
-    r"/login": {"origins": "http://localhost:3000", "supports_credentials": True},
-    r"/api/*": {"origins": "http://localhost:3000", "supports_credentials": True}
-})
+    r"/login": {"origins": "https://e7a8-61-174-128-123.ngrok-free.app", "supports_credentials": True},
+    r"/api/*": {"origins": "https://e7a8-61-174-128-123.ngrok-free.app", "supports_credentials": True},
+}
+)
+
+# CORS(app, resources={
+#     r"/api/*": {"origins": "https://e7a8-61-174-128-123.ngrok-free.app"}, 
+#     "supports_credentials": True}
+#     )
+
 
 # 配置数据库
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///users.db'
@@ -30,6 +37,32 @@ class User(db.Model, UserMixin):
     password = db.Column(db.String(120), nullable=False)
     role = db.Column(db.String(20), nullable=False, default='user')
     profile_name = db.Column(db.String(80), nullable=False)  # 添加 profile_name 字段
+
+
+# 静态文件路由
+@app.route('/', defaults={'path': ''})
+@app.route('/<path:path>')
+def serve_frontend(path):
+    if path != "" and os.path.exists(os.path.join(app.static_folder, path)):
+        return send_from_directory(app.static_folder, path)
+    return send_from_directory(app.static_folder, 'index.html')
+
+# # 自定义静态文件路径（指向 frontend/build）
+# FRONTEND_BUILD_DIR = os.path.join(os.path.dirname(__file__), '..', 'frontend', 'build')
+
+# # 静态文件路由
+# @app.route('/', defaults={'path': ''})
+# @app.route('/<path:path>')
+# def serve_frontend(path):
+#     if not path or path == 'index.html':
+#         print(send_from_directory(FRONTEND_BUILD_DIR, 'index.html'))
+#         return send_from_directory(FRONTEND_BUILD_DIR, 'index.html')
+#     # 处理 static 下的嵌套文件
+#     full_path = os.path.join(FRONTEND_BUILD_DIR, path)
+#     if os.path.exists(full_path):
+#         return send_from_directory(FRONTEND_BUILD_DIR, path)
+#     # 如果文件不存在，返回 index.html 支持 SPA 路由
+#     return send_from_directory(FRONTEND_BUILD_DIR, 'index.html'), 404
 
 @login_manager.user_loader
 def load_user(user_id):
@@ -63,7 +96,7 @@ def login():
             return jsonify({"message": "用户名或密码错误"}), 401
         except Exception as e:
             return jsonify({"message": f"服务器错误: {str(e)}"}), 500
-    return render_template('login.html')
+    return render_template('login.html')  # GET 请求渲染登录页面
 
 @app.route('/logout')
 @login_required
@@ -75,4 +108,4 @@ with app.app_context():
     db.create_all()  # 确保数据库表存在
 
 if __name__ == '__main__':
-    app.run(debug=True, host='0.0.0.0', port=5000)
+    app.run(debug=True, host='0.0.0.0', port=5007)
