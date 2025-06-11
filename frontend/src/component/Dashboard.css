@@ -1,0 +1,49 @@
+.dashboard .profile {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px;
+}
+
+.dashboard .profile img {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+}
+
+.dashboard .profile-info h3 {
+  margin: 0;
+}
+
+.dashboard .token-count {
+  text-align: right;
+}
+
+.dashboard .token-count .count {
+  font-size: 24px;
+  color: #333;
+  font-weight: bold;
+}
+
+.dashboard .toggle-buttons button {
+  margin: 5px;
+  padding: 10px 15px;
+}
+
+.dashboard .fetch-btn {
+  background-color: #4CAF50;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  cursor: pointer;
+  margin-top: 20px;
+}
+
+.dashboard .admin-btn {
+  background-color: #f44336;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  cursor: pointer;
+  margin-left: 10px;
+}

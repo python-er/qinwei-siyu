@@ -2,10 +2,18 @@
 <html>
 <body>
     <h2>登录</h2>
-    <form method="POST" action="/login">
+    <form method="POST" action="/api/login">
         <label>用户名:</label><input type="text" name="username"><br>
         <label>密码:</label><input type="password" name="password"><br>
         <input type="submit" value="登录">
+    </form>
+
+    <h2>注册</h2>
+    <form method="POST" action="/api/register">
+        <label>用户名:</label><input type="text" name="username"><br>
+        <label>密码:</label><input type="password" name="password"><br>
+        <label>昵称:</label><input type="text" name="profile_name"><br> <!-- 可选，默认使用用户名 -->
+        <input type="submit" value="注册">
     </form>
 </body>
 </html>
